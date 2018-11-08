@@ -158,7 +158,7 @@ class IndexController extends ApplicationComponent {
 
     await mkdirp(path.dirname(tarballPath));
     await fs.writeFile(tarballPath, tarballBuffer);
-    this.ctx.onErrorCatch(() => fs.unlink(tarballPath));
+    this.ctx.onErrorCatch(async () => await fs.unlink(tarballPath));
     const cache = new this.ctx.Cache.Package(this.ctx.redis);
     await cache.build('packagedata', { package: name });
     this.ctx.status = 200;
