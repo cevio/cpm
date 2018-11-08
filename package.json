@@ -1,0 +1,33 @@
+{
+  "name": "cpm",
+  "version": "1.0.0",
+  "description": "The cpm project of rex",
+  "scripts": {
+    "dev": "clusic server dev --env=development --port=8080",
+    "start": "clusic server start --env=production --port=8080",
+    "stop": "clusic server stop",
+    "restart": "clusic server restart"
+  },
+  "clusic": {
+    "framework": "@clusic/rex",
+    "agents": []
+  },
+  "dependencies": {
+    "@clusic/cache": "^1.0.4",
+    "@clusic/catch": "^1.0.4",
+    "@clusic/method": "^1.0.6",
+    "@clusic/mysql": "^1.0.6",
+    "@clusic/redis": "^1.0.1",
+    "@clusic/rex": "^1.0.12",
+    "@evio/intersect": "^1.0.4",
+    "axios": "^0.18.0",
+    "compare-versions": "^3.4.0",
+    "koa-better-body": "^3.0.4",
+    "koa-convert": "^1.2.0",
+    "koa-mount": "^4.0.0",
+    "koa-static": "^5.0.0",
+    "mz": "^2.7.0",
+    "mz-modules": "^2.1.0",
+    "request": "^2.88.0"
+  }
+}

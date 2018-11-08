@@ -1,0 +1,21 @@
+{
+  "@clusic/redis": {
+    "contextName": "redis",
+    "options": {
+      "host": "192.168.2.182"
+    }
+  },
+  "@clusic/cache": {
+    "namespace": "REDIS:CPM:DEV"
+  },
+  "@clusic/mysql": {
+    "pool": true,
+    "contextName": "mysql",
+    "options": {
+      "host": "192.168.2.181",
+      "user": "shenyj",
+      "password": "1qaz2wsx",
+      "database": "cpm"
+    }
+  }
+}

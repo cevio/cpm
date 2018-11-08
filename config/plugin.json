@@ -1,0 +1,14 @@
+{
+  "@clusic/catch": {
+    "enable": true
+  },
+  "@clusic/redis": {
+    "enable": true
+  },
+  "@clusic/cache": {
+    "enable": true
+  },
+  "@clusic/mysql": {
+    "enable": true
+  }
+}
