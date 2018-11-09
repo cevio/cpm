@@ -16,15 +16,15 @@ class UserController extends ApplicationComponent {
   @Get('/org.couchdb.user::account')
   async ShowUser() {
     const account = this.ctx.params.account;
-    const user = await this.Service.Authorization.User(account);
-    const userExists = await this.Service.User.FindUserByAccount(account);
     const cache = new this.ctx.Cache.User(this.ctx.redis);
+    const userExists = await this.Service.User.FindUserByAccount(account);
+
     if (!userExists) {
+      const user = await this.Service.Authorization.User(account);
       await this.Service.User.Add(account, user.name, user.email, user.avatar, user.scopes, user.extra);
-    } else {
-      await this.Service.User.Update(userExists.id, user.name, user.email, user.avatar, user.scopes, user.extra);
+      await cache.build('user', { account });
     }
-    await cache.build('user', { account });
+
     this.ctx.body = {
       _id: 'org.couchdb.user:' + account,
       name: user.account,
