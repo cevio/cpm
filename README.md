@@ -24,7 +24,7 @@ $ cd cpm
 $ npm i
 
 # install cli
-npm i -g @clusic/cli pm2
+$ npm i -g @clusic/cli pm2
 
 # development
 $ npm run dev
