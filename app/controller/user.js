@@ -53,7 +53,7 @@ class UserController extends ApplicationComponent {
 
     if (!name || !password) throw this.ctx.error('paramError:params missing, name, email or password missing.', 422);
 
-    const user = await this.Service.Authorization.Login(name, password);
+    const user = await this.Service.Authorization.Login(name, password).catch(e => Promise.reject(this.ctx.error('user is invaild or password is invaild: ' + e.message, 401)));
     const userExists = await this.Service.User.FindUserByAccount(account);
     const cache = new this.ctx.Cache.User(this.ctx.redis);
 

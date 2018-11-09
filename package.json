@@ -15,10 +15,10 @@
   "dependencies": {
     "@clusic/cache": "^1.0.4",
     "@clusic/catch": "^1.0.4",
-    "@clusic/method": "^1.0.6",
+    "@clusic/method": "^1.0.7",
     "@clusic/mysql": "^1.0.6",
     "@clusic/redis": "^1.0.1",
-    "@clusic/rex": "^1.0.12",
+    "@clusic/rex": "^1.0.13",
     "@evio/intersect": "^1.0.4",
     "axios": "^0.18.0",
     "compare-versions": "^3.4.0",

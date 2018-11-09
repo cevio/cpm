@@ -6,8 +6,13 @@ module.exports = class PackageCache extends CommonCacheClassicModule {
     super(...args);
   }
 
-  @Expression('/package/:package(.*)')
-  async packagedata(args) {
-    return await this.ctx.Service.Package.Cache(args.package);
+  @Expression('/packages/:package')
+  async PackageList(args) {
+    return await this.ctx.Service.Package.ListCache(args.package);
+  }
+
+  @Expression('/package/:package/:version')
+  async PackageVersion(args) {
+    return await this.ctx.Service.Package.SingleCache(args.package, args.version);
   }
 };
