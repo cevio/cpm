@@ -1,6 +1,6 @@
 {
   "name": "cpm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The cpm project of rex",
   "scripts": {
     "dev": "clusic server dev --env=development --port=8080",

@@ -78,6 +78,7 @@ $ npm whoami [--registry <registry>] --registry=http://npm.test.cn
 $ npm owner add <user> [<@scope>/]<pkg> --registry=http://npm.test.cn
 $ npm owner rm <user> [<@scope>/]<pkg> --registry=http://npm.test.cn
 $ npm owner ls [<@scope>/]<pkg> --registry=http://npm.test.cn
+$ npm deprecate <pkg>[@<version>] <message> --registry=http://npm.test.cn
 ```
 
 当然在每个命令后面写上 `--registry=http://npm.test.cn` 比较繁琐，那么我们可以自己生成一个命令叫cpm简化它。
@@ -92,6 +93,100 @@ childProcess.spawn('npm', argv, { stdio: 'inherit' });
 ```
 
 > 虽然没有支持全部命令，但是对于我们的使用已经完全足够。在接下来的计划众，我们将尽可能支持更多的命令。
+
+## Create Your Authorization
+
+你可以建立一个`/app/service/authorization.js`的文件，按照service模块的写法编写，也可以这样：
+
+```bash
+clusic add authorization --service
+```
+
+此文件作用就是自定义用户认证体系，有2个函数需要实现：`async Login() {}` 与 `async User() {}`
+
+我们来看个例子：
+
+```javascript
+const axios = require('axios');
+const { ContextComponent } = require('@clusic/method');
+const ajax = axios.create({
+  baseURL: 'http://auth.mzftech.cn/cnpm'
+});
+
+ajax.interceptors.response.use(response => response.data, error => {
+  const response = error.response;
+  if (response && response.data) return Promise.reject(makeErrorWithCode(response.data, response.status));
+  return Promise.reject(error);
+})
+
+module.exports = class AuthorizationService extends ContextComponent {
+  constructor(ctx) {
+    super(ctx);
+  }
+
+  async Login(account, password) {
+    const user = await ajax.post('/employee/check-password', { account, password });
+    return {
+      account: user.account,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      scopes: ['@' + account, '@html5', '@node'],
+      extra: {
+        department: user.department,
+        position: user.position,
+        mobile: user.mobile,
+        gender: user.gender,
+        isleader: user.isleader,
+        english_name: user.english_name,
+        telephone: user.telephone,
+        qr_code: user.qr_code,
+        alias: user.alias
+      }
+    }
+  }
+
+  async User(account) {
+    const user = await ajax.get('/employee/' + account);
+    return {
+      account: user.account,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      scopes: ['@' + account, '@html5', '@node'],
+      extra: {
+        department: user.department,
+        position: user.position,
+        mobile: user.mobile,
+        gender: user.gender,
+        isleader: user.isleader,
+        english_name: user.english_name,
+        telephone: user.telephone,
+        qr_code: user.qr_code,
+        alias: user.alias
+      }
+    }
+  }
+};
+
+function makeErrorWithCode(str, code = 500) {
+  const err = new Error(str);
+  if (code < 100) code = 900 + code;
+  if (code > 699) code = 500;
+  err.status = code;
+  return err;
+}
+```
+
+两个函数必须返回的参数有：
+
+- account `string` 用户账号，唯一性的。
+- name `string` 用户姓名
+- email `string` 用户邮箱
+- avatar `string` 用户头像
+- scopes `array` 用户私有域数组
+
+至于 `extra` 是额外参数，可以随意传，作用在web界面上。
 
 ## How to contribute
 
