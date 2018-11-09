@@ -1,3 +1,4 @@
+const uuidv4 = require('uuid/v4');
 const crypto = require('crypto');
 const fs = require('mz/fs');
 const path = require('path');
@@ -47,12 +48,39 @@ module.exports = class PackageService extends ContextComponent {
     return await this.ctx.mysql.exec(`SELECT id FROM ?? WHERE pathname=?`, this.table, pathname);
   }
 
+  async Delete(id) {
+    const res = await this.Read(id);
+    if (!res.length) throw this.ctx.error('can not find the package of ' + id, 400);
+    id = res[0].id;
+    await this.ctx.mysql.delete(this.table, 'id=?', id);
+    await this.Service.Tag.DeleteAll(id);
+    await this.Service.Maintainer.DeleteAll(id);
+    return await this.Service.Version.DeleteAll(id);
+  }
+
+  async DeleteAll(id) {
+    const pathname = id;
+    const cache = new this.ctx.Cache.Package(this.ctx.redis);
+    await this.ctx.mysql.begin();
+    await this.ctx.redis.begin();
+    const versions = await this.Delete(id);
+    for (let i = 0; i < versions.length; i++) {
+      await cache.delete('PackageVersion', { 
+        package: pathname, 
+        version: versions[i] 
+      });
+    }
+    await cache.delete('PackageList', { package: pathname });
+  }
+
   async SingleCache(pathname, version) {
     let pkg = await this.ctx.mysql.exec(`SELECT id FROM ?? WHERE pathname=?`, this.table, pathname);
     if (!pkg.length) return;
     const versions = await this.ctx.mysql.exec('SELECT id, name, package FROM ?? WHERE pid=? AND name=?', this.Service.Version.table, pkg[0].id, version);
     if (!versions.length) return;
-    return JSON.parse(decodeURIComponent(versions[0].package));
+    const result = JSON.parse(decodeURIComponent(versions[0].package));
+    result._rev = versions[0].rev;
+    return result;
   }
 
   async ListCache(pathname) {
@@ -62,7 +90,7 @@ module.exports = class PackageService extends ContextComponent {
     if (!pkg.length) return;
     const tags = await this.ctx.mysql.exec(`SELECT vid, name FROM ?? WHERE pid=?`, this.Service.Tag.table, pkg[0].id);
     if (!tags.length) return;
-    const versions = await this.ctx.mysql.exec('SELECT id, name, package FROM ?? WHERE pid=?', this.Service.Version.table, pkg[0].id);
+    const versions = await this.ctx.mysql.exec('SELECT id, name, package, rev FROM ?? WHERE pid=?', this.Service.Version.table, pkg[0].id);
     if (!versions.length) return;
 
     for (let i = 0; i < versions.length; i++) {
@@ -71,6 +99,7 @@ module.exports = class PackageService extends ContextComponent {
       version.package = JSON.parse(decodeURIComponent(version.package));
       const readme = version.package.readme;
       delete version.package.readme;
+      version.package._rev = version.rev;
       if (version.id === tags[0].vid) {
         result = JSON.parse(JSON.stringify(version.package));
         result.readme = readme;
@@ -122,11 +151,28 @@ module.exports = class PackageService extends ContextComponent {
     return await this.Fetch(pathname, version);
   }
 
+  async Deprecate(pathname, version, deprecatedText) {
+    const res = await this.Read(pathname);
+    if (!res.length) throw this.ctx.error('can not find the package of ' + pathname, 400);
+    const id = res[0].id;
+    await this.ctx.mysql.begin();
+    await this.ctx.redis.begin();
+    await this.Service.Version.Deprecate(id, version, deprecatedText);
+    const cache = new this.ctx.Cache.Package(this.ctx.redis);
+    await cache.build('PackageVersion', { package: pathname, version });
+    return await cache.build('PackageList', { package: pathname });
+  }
+
   async Publish(pkg, username) {
     const name = pkg.name;
     const filename = Object.keys(pkg._attachments || {})[0];
     const version = Object.keys(pkg.versions || {})[0];
     const distTags = pkg['dist-tags'] || {};
+
+    if (pkg.versions[version].deprecated) {
+      return await this.Deprecate(name, version, encodeURIComponent(JSON.stringify(pkg.versions[version])));
+    }
+
     const tarballPath = path.resolve(this.app.config.nfs, filename);
     
     if (!filename) throw this.ctx.error('attachment_error: package._attachments is empty', 400);
@@ -136,7 +182,6 @@ module.exports = class PackageService extends ContextComponent {
     }
 
     if (!Object.keys(distTags).length) throw this.ctx.error('invalid: dist-tags should not be empty', 400);
-
 
     if (!this.packageNameRegExp.test(name)) throw this.ctx.error('invalid: wrong package name: ' + name, 403);
     const exec = this.packageNameRegExp.exec(name);
@@ -194,7 +239,7 @@ module.exports = class PackageService extends ContextComponent {
       pkg.versions[version].dist.size = attachment.length;
     }
     const vid = await this.Service.Version.Create(
-      packageId, version, pkg.description, username, shasum, filename, attachment.length, 
+      packageId, version, pkg.description, username, shasum, filename, attachment.length, uuidv4(),
       encodeURIComponent(JSON.stringify(pkg.versions[version]))
     );
     const tags = [];

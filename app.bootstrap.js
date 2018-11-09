@@ -1,4 +1,3 @@
-const path = require('path');
 const mount = require('koa-mount');
 const serve = require('koa-static');
 module.exports = async app => {
@@ -10,7 +9,6 @@ module.exports = async app => {
         error: error.message
       }
     });
-    console.log(ctx);
     await next();
   });
 };

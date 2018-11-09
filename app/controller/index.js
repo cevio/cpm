@@ -1,5 +1,5 @@
 const {
-  Get, Put,
+  Get, Put, Delete,
   Order,
   Controller,
   Middleware,
@@ -29,7 +29,27 @@ class IndexController extends ApplicationComponent {
     }
   }
 
-  @Get(/^\/(\@[a-z][a-z0-9\_\-\.%]+(\/[a-z][a-z0-9\_\-\.]+)?)(\/(\d+\.\d+\.[a-z0-9\-\_\.]+))?$/)
+  @Delete(/^\/(\@[a-z][a-z0-9\_\-\.\%]+(\/[a-z][a-z0-9\_\-\.]+)?)\/\-rev\/(.+)$/)
+  @Middleware('Login')
+  async DeletePackageEntries() {
+    const pathname = this.ctx.params[0];
+    await this.Service.Package.DeleteAll(pathname);
+    this.ctx.body = {
+      ok: true
+    }
+  }
+
+  @Delete('/download/:scope/:package-:version.tgz/-rev/:rev')
+  @Middleware('Login')
+  async DeletePackageByVersion() {
+    const scope = this.ctx.params.scope;
+    const pkg = this.ctx.params.package;
+    const version = this.ctx.params.version;
+    if (!scope) throw this.ctx.error('you can not delete private package', 400);
+    this.ctx.body = await this.Service.Version.DeleteVersion(scope + '/' + pkg, version);
+  }
+
+  @Get(/^\/(\@[a-z][a-z0-9\_\-\.\%]+(\/[a-z][a-z0-9\_\-\.]+)?)(\/(\d+\.\d+\.[a-z0-9\-\_\.]+))?$/)
   async GetScopePackage() {
     const pathname = decodeURIComponent(this.ctx.params[0]);
     const version = this.ctx.params[3];
@@ -52,7 +72,6 @@ class IndexController extends ApplicationComponent {
   @Middleware('Body')
   async Publish() {
     const pkg = this.ctx.request.body;
-    console.log(pkg)
     const username = this.ctx.account;
     const result = await this.Service.Package.Publish(pkg, username);
     this.ctx.status = 200;

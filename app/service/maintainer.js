@@ -41,4 +41,8 @@ module.exports = class MaintainerService extends ContextComponent {
       }
     }
   }
+
+  async DeleteAll(pid) {
+    await this.ctx.mysql.delete(this.table, 'pid=?', pid);
+  }
 };

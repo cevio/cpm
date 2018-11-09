@@ -31,4 +31,8 @@ module.exports = class IndexService extends ContextComponent {
     if (res.length) return await this.Update(res[0].id, vid);
     return await this.Create(name, pid, vid);
   }
+
+  async DeleteAll(pid) {
+    await this.ctx.mysql.delete(this.table, 'pid=?', pid);
+  }
 };
