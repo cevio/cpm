@@ -5,6 +5,11 @@ const {
   Middleware,
   ApplicationComponent,
 } = require('@clusic/method');
+const os = require('os');
+const project = require('../../package.json');
+
+global.CPM_CACHE = {};
+global.CPM_TIME = 0;
 
 @Controller()
 @Order(2)
@@ -15,7 +20,28 @@ class IndexController extends ApplicationComponent {
   
   @Get('/')
   async welcome() {
-    this.ctx.body = 'Welcome to use Rex';
+    if (Date.now() - global.CPM_TIME > 10 * 60 * 1000) {
+      global.CPM_CACHE = await this.Service.Index.Total();
+      global.CPM_TIME = Date.now();
+    }
+    global.CPM_CACHE.version = project.version;
+    global.CPM_CACHE.description = project.description;
+    global.CPM_CACHE.machine = {
+      cpu: {
+        arch: os.arch(),
+        info: os.cpus()
+      },
+      freemem: os.freemem(),
+      hostname: os.hostname(),
+      networkInterfaces: os.networkInterfaces(),
+      platform: os.platform(),
+      release: os.release(),
+      totalmem: os.totalmem(),
+      type: os.type(),
+      uptime: os.uptime(),
+      loadavg: os.loadavg()
+    }
+    this.ctx.body = global.CPM_CACHE;
   }
 
   @Put(/^\/(\@[a-z][a-z0-9\_\-\.\%]+(\/[a-z][a-z0-9\_\-\.]+)?)\/\-rev\/(.+)$/)
