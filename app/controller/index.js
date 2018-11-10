@@ -44,6 +44,15 @@ class IndexController extends ApplicationComponent {
     this.ctx.body = global.CPM_CACHE;
   }
 
+  /**
+   * @public
+   * @desc 更新package信息，更新maintainers信息和versions信息
+   * @method PUT
+   * @api /{package}/-rev/{rev}
+   * @param path.package {string} 包名，可以是通过 encodeURIComponent(package)后的包名
+   * @param path.rev {string} rev散列标识
+   * @return { ok<boolean> }
+   */
   @Put(/^\/(\@[a-z][a-z0-9\_\-\.\%]+(\/[a-z][a-z0-9\_\-\.]+)?)\/\-rev\/(.+)$/)
   @Middleware('Login')
   @Middleware('Body')
@@ -55,6 +64,15 @@ class IndexController extends ApplicationComponent {
     }
   }
 
+  /**
+   * @public
+   * @desc 删除整个包数据
+   * @method DELETE
+   * @api /{package}/-rev/{rev}
+   * @param path.package {string} 包名，可以是通过 encodeURIComponent(package)后的包名
+   * @param path.rev {string} rev散列标识
+   * @return { ok<boolean> }
+   */
   @Delete(/^\/(\@[a-z][a-z0-9\_\-\.\%]+(\/[a-z][a-z0-9\_\-\.]+)?)\/\-rev\/(.+)$/)
   @Middleware('Login')
   async DeletePackageEntries() {
@@ -65,6 +83,16 @@ class IndexController extends ApplicationComponent {
     }
   }
 
+  /**
+   * @public
+   * @desc 删除某个包中的一个版本
+   * @api /download/{scope}/{package}-{version}.tgz/-rev{rev}
+   * @param path.scope {string} 包的作用域
+   * @param path.package {string} 包名，可以是通过 encodeURIComponent(package)后的包名
+   * @param path.version {string} 需要删除的版本号
+   * @param path.rev {string} rev散列标识
+   * @return { package info }
+   */
   @Delete('/download/:scope/:package-:version.tgz/-rev/:rev')
   @Middleware('Login')
   async DeletePackageByVersion() {
