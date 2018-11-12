@@ -3,8 +3,8 @@
   "version": "1.0.1",
   "description": "The cpm project of rex",
   "scripts": {
-    "dev": "clusic server dev --env=development --port=8080",
-    "start": "clusic server start --env=production --port=7001",
+    "dev": "clusic server dev --env development --port 7002",
+    "start": "clusic server start --env production --port 7001",
     "stop": "clusic server stop",
     "restart": "clusic server restart"
   },
