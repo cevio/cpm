@@ -25,10 +25,10 @@ class UserController extends ApplicationComponent {
   async ShowUser() {
     const account = this.ctx.params.account;
     const cache = new this.ctx.Cache.User(this.ctx.redis);
-    const userExists = await this.Service.User.FindUserByAccount(account);
+    let user = await this.Service.User.FindUserByAccount(account);
 
-    if (!userExists) {
-      const user = await this.Service.Authorization.User(account);
+    if (!user) {
+      user = await this.Service.Authorization.User(account);
       await this.Service.User.Add(account, user.name, user.email, user.avatar, user.scopes, user.extra);
       await cache.build('user', { account });
     }
