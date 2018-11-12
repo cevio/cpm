@@ -23,14 +23,13 @@
     "@evio/mpm": "^1.0.2",
     "axios": "^0.18.0",
     "compare-versions": "^3.4.0",
-    "http-errors": "^1.7.1",
     "koa-better-body": "^3.0.4",
     "koa-convert": "^1.2.0",
     "koa-mount": "^4.0.0",
+    "koa-static": "^5.0.0",
     "mz": "^2.7.0",
     "mz-modules": "^2.1.0",
     "request": "^2.88.0",
-    "resolve-path": "^1.4.0",
     "uuid": "^3.3.2"
   }
 }

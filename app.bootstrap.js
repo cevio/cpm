@@ -1,6 +1,7 @@
 const mount = require('koa-mount');
+const static = require('koa-static');
 module.exports = async app => {
-  app.use(mount('/download', app.Middleware.Static(app.config.nfs)));
+  app.use(mount('/download', static(app.config.nfs)));
   app.use(async (ctx, next) => {
     ctx.onResponseError(error => {
       ctx.status = 422;
