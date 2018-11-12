@@ -2,23 +2,27 @@
   "@clusic/redis": {
     "contextName": "redis",
     "options": {
-      "port": 6379,
-      "host": "127.0.0.1",
-      "password": "password"
+      "host": "192.168.2.182"
     }
   },
   "@clusic/cache": {
-    "namespace": "REDIS:TEMP"
+    "namespace": "REDIS:CPM:PRODUCTION"
   },
   "@clusic/mysql": {
     "pool": true,
     "contextName": "mysql",
     "options": {
-      "host": "127.0.0.1",
-      "user": "user",
-      "password": "password",
-      "database": "database",
-      "port": 389
+      "host": "192.168.2.181",
+      "user": "shenyj",
+      "password": "1qaz2wsx",
+      "database": "mpm"
     }
+  },
+  "@evio/mpm": {
+    "baseURL": "http://auth.mzftech.cn",
+    "scopes": [
+      "@html5",
+      "@node"
+    ]
   }
 }

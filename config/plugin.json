@@ -10,5 +10,8 @@
   },
   "@clusic/mysql": {
     "enable": true
+  },
+  "@evio/mpm": {
+    "enable": true
   }
 }

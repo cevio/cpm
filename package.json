@@ -20,6 +20,7 @@
     "@clusic/redis": "^1.0.1",
     "@clusic/rex": "^1.0.13",
     "@evio/intersect": "^1.0.4",
+    "@evio/mpm": "^1.0.0",
     "axios": "^0.18.0",
     "compare-versions": "^3.4.0",
     "http-errors": "^1.7.1",

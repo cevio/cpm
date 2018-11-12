@@ -32,7 +32,7 @@ CREATE TABLE `maintainer` (
   `ctime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uq_pid_uid` (`account`,`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -51,7 +51,7 @@ CREATE TABLE `package` (
   UNIQUE KEY `uq_pathname` (`pathname`),
   UNIQUE KEY `uq_scope_alias` (`scope`,`name`),
   KEY `pathname` (`pathname`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -69,7 +69,7 @@ CREATE TABLE `tag` (
   `mtime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_pid_name` (`pid`,`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -90,7 +90,7 @@ CREATE TABLE `user` (
   `mtime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uq_account` (`account`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -112,7 +112,7 @@ CREATE TABLE `version` (
   `package` text NOT NULL,
   `rev` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 

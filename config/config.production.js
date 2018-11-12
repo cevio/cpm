@@ -1,6 +1,6 @@
 const path = require('path');
 module.exports = {
-  loginExpire: 2 * 24 * 60 * 60, // 登录有效期 秒
+  loginExpire: 3 * 24 * 60 * 60, // 登录有效期 秒
   officialNpmRegistry: 'https://registry.npmjs.com',
   officialNpmReplicate: 'https://replicate.npmjs.com',
   sourceNpmRegistry: 'https://registry.npm.taobao.org',

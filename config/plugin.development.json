@@ -17,5 +17,12 @@
       "password": "1qaz2wsx",
       "database": "cpm"
     }
+  },
+  "@evio/mpm": {
+    "baseURL": "http://auth.mzftech.cn",
+    "scopes": [
+      "@html5",
+      "@node"
+    ]
   }
 }
