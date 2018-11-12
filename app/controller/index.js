@@ -53,7 +53,7 @@ class IndexController extends ApplicationComponent {
    * @param path.rev {string} rev散列标识
    * @return { ok<boolean> }
    */
-  @Put(/^\/(\@[a-z][a-z0-9\_\-\.\%]+(\/[a-z][a-z0-9\_\-\.]+)?)\/\-rev\/(.+)$/)
+  @Put(/^\/(\@[a-z]([a-z0-9\_\-\.\%]+)?(\/[a-z]([a-z0-9\_\-\.]+)?)?)\/\-rev\/(.+)$/)
   @Middleware('Login')
   @Middleware('Body')
   async UpdatePackage() {
@@ -73,7 +73,7 @@ class IndexController extends ApplicationComponent {
    * @param path.rev {string} rev散列标识
    * @return { ok<boolean> }
    */
-  @Delete(/^\/(\@[a-z][a-z0-9\_\-\.\%]+(\/[a-z][a-z0-9\_\-\.]+)?)\/\-rev\/(.+)$/)
+  @Delete(/^\/(\@[a-z]([a-z0-9\_\-\.\%]+)?(\/[a-z]([a-z0-9\_\-\.]+)?)?)\/\-rev\/(.+)$/)
   @Middleware('Login')
   async DeletePackageEntries() {
     const pathname = this.ctx.params[0];
@@ -103,25 +103,25 @@ class IndexController extends ApplicationComponent {
     this.ctx.body = await this.Service.Version.DeleteVersion(scope + '/' + pkg, version);
   }
 
-  @Get(/^\/(\@[a-z][a-z0-9\_\-\.\%]+(\/[a-z][a-z0-9\_\-\.]+)?)(\/(\d+\.\d+\.[a-z0-9\-\_\.]+))?$/)
+  @Get(/^\/(\@[a-z]([a-z0-9\_\-\.\%]+)?(\/[a-z]([a-z0-9\_\-\.]+)?)?)(\/(\d+\.\d+\.[a-z0-9\-\_\.]+))?$/)
   async GetScopePackage() {
     const pathname = decodeURIComponent(this.ctx.params[0]);
+    const version = this.ctx.params[5];
+    this.ctx.type = 'application/json; charset=utf-8';
+    if (version) return this.ctx.body = await this.Service.Package.VersionPackage(pathname, version);
+    this.ctx.body = await this.Service.Package.ListPackages(pathname);
+  }
+
+  @Get(/^\/([a-z]([a-z0-9\_\-\.]+)?)(\/(\d+\.\d+\.[a-z0-9\-\_\.]+))?$/)
+  async GetNormalizePackage() {
+    const pathname = this.ctx.params[0];
     const version = this.ctx.params[3];
     this.ctx.type = 'application/json; charset=utf-8';
     if (version) return this.ctx.body = await this.Service.Package.VersionPackage(pathname, version);
     this.ctx.body = await this.Service.Package.ListPackages(pathname);
   }
 
-  @Get(/^\/([a-z][a-z0-9\_\-\.]+)(\/(\d+\.\d+\.[a-z0-9\-\_\.]+))?$/)
-  async GetNormalizePackage() {
-    const pathname = this.ctx.params[0];
-    const version = this.ctx.params[2];
-    this.ctx.type = 'application/json; charset=utf-8';
-    if (version) return this.ctx.body = await this.Service.Package.VersionPackage(pathname, version);
-    this.ctx.body = await this.Service.Package.ListPackages(pathname);
-  }
-
-  @Put(/^\/(\@[a-z][a-z0-9\_\-\.\%]+)$/)
+  @Put(/^\/(\@[a-z]([a-z0-9\_\-\.\%]+)?)$/)
   @Middleware('Login')
   @Middleware('Body')
   async Publish() {
@@ -132,7 +132,7 @@ class IndexController extends ApplicationComponent {
     this.ctx.body = result;
   }
 
-  @Put(/^\/([a-z][a-z0-9\_\-\.]+)$/)
+  @Put(/^\/([a-z]([a-z0-9\_\-\.]+)?)$/)
   async ForbidPublish() {
     throw this.ctx.error('you can not publish private package.');
   }
