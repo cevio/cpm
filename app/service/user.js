@@ -7,7 +7,7 @@ module.exports = class UserService extends ContextComponent {
   }
 
   async FindUserByAccount(account) {
-    const result = await this.ctx.mysql.exec(`SELECT id FROM ?? WHERE account=?`, this.table, account);
+    const result = await this.ctx.mysql.exec(`SELECT * FROM ?? WHERE account=?`, this.table, account);
     if (result.length) return result[0];
   }
 
