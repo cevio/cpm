@@ -25,7 +25,7 @@ module.exports = class MaintainerService extends ContextComponent {
 
   async Update(pid, maintainers) {
     const oldMaintainers = (await this.Read(pid)).map(user => user.account);
-    const res = intersect(oldMaintainers, maintainers.map(user => user.name));
+    const res = intersect(oldMaintainers, maintainers.filter(user => !!user.name).map(user => user.name));
     if (res.adds.length) {
       for (let i = 0; i < res.adds.length; i++) {
         await this.Create(res.adds[i], pid);
