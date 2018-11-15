@@ -1,6 +1,6 @@
 # China Package Manager
 
-简称 CPM
+![CPM](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/cpm.png)
 
 ## WHat is CPM?
 
