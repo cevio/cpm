@@ -9,7 +9,7 @@ module.exports = async app => {
         error: error.message
       }
     });
-    console.log(ctx)
+    // console.log(ctx)
     await next();
   });
 };
