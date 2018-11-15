@@ -18,7 +18,7 @@ class IndexController extends ApplicationComponent {
     super(ctx);
   }
   
-  @Get('/')
+  @Get('/registry')
   async welcome() {
     if (Date.now() - global.CPM_TIME > 10 * 60 * 1000) {
       global.CPM_CACHE = await this.Service.Index.Total();
