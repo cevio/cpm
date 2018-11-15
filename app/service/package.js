@@ -39,9 +39,16 @@ module.exports = class PackageService extends ContextComponent {
   async Create(scope, name, pathname) {
     const res = await this.ctx.mysql.insert(this.table, {
       scope, name, pathname,
-      ctime: new Date()
+      ctime: new Date(),
+      mtime: new Date()
     });
     return res.insertId;
+  }
+
+  async UpdateMTime(id) {
+    await this.ctx.mysql.update(this.table, {
+      mtime: new Date()
+    }, 'id=?', id);
   }
 
   async Read(pathname) {
@@ -86,13 +93,13 @@ module.exports = class PackageService extends ContextComponent {
   async ListCache(pathname) {
     const UserCache = new this.ctx.Cache.User(this.ctx.redis);
     let result, $verions = {}, $vids = {}, distTags = {};
-    let pkg = await this.ctx.mysql.exec(`SELECT id FROM ?? WHERE pathname=?`, this.table, pathname);
+    let pkg = await this.ctx.mysql.exec(`SELECT id, ctime, mtime FROM ?? WHERE pathname=?`, this.table, pathname);
     if (!pkg.length) return;
     const tags = await this.ctx.mysql.exec(`SELECT vid, name FROM ?? WHERE pid=?`, this.Service.Tag.table, pkg[0].id);
     if (!tags.length) return;
-    const versions = await this.ctx.mysql.exec('SELECT id, name, package, rev FROM ?? WHERE pid=?', this.Service.Version.table, pkg[0].id);
+    const versions = await this.ctx.mysql.exec('SELECT id, name, package, rev, ctime FROM ?? WHERE pid=?', this.Service.Version.table, pkg[0].id);
     if (!versions.length) return;
-
+    const times = {};
     for (let i = 0; i < versions.length; i++) {
       const version = versions[i];
       if (!version.package) continue;
@@ -108,6 +115,7 @@ module.exports = class PackageService extends ContextComponent {
       }
       $verions[version.name] = version.package;
       $vids[version.id] = version.name;
+      times[version.name] = version.ctime;
     }
 
     for (let j = 0; j < tags.length; j++) {
@@ -134,6 +142,9 @@ module.exports = class PackageService extends ContextComponent {
     result.maintainers = maintainers;
     result.versions = $verions;
     result['dist-tags'] = distTags;
+    result.time = times;
+    result.time.created = pkg[0].ctime;
+    result.time.modified = pkg[0].mtime;
     return result;
   }
 
@@ -158,6 +169,7 @@ module.exports = class PackageService extends ContextComponent {
     await this.ctx.mysql.begin();
     await this.ctx.redis.begin();
     await this.Service.Version.Deprecate(id, version, deprecatedText);
+    await this.UpdateMTime(id);
     const cache = new this.ctx.Cache.Package(this.ctx.redis);
     await cache.build('PackageVersion', { package: pathname, version });
     return await cache.build('PackageList', { package: pathname });
@@ -258,6 +270,7 @@ module.exports = class PackageService extends ContextComponent {
     await mkdirp(path.dirname(tarballPath));
     await fs.writeFile(tarballPath, tarballBuffer);
     this.ctx.onErrorCatch(async () => await fs.unlink(tarballPath));
+    await this.UpdateMTime(packageId);
     const cache = new this.ctx.Cache.Package(this.ctx.redis);
     await cache.build('PackageVersion', { package: name, version });
     return await cache.build('PackageList', { package: name });
@@ -281,6 +294,7 @@ module.exports = class PackageService extends ContextComponent {
       if (_maintainers.map(user => user.account).indexOf(this.ctx.account) === -1) throw this.ctx.error('you are not in maintainers list, you are not the member of ' + pathname, 403);
       await this.Service.Maintainer.Update(packageId, maintainers);
     }
+    await this.UpdateMTime(packageId);
     await cache.build('PackageList', { package: pathname });
   }
 };

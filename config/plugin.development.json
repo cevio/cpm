@@ -6,7 +6,7 @@
     }
   },
   "@clusic/cache": {
-    "namespace": "REDIS:CPM:DEV"
+    "namespace": "REDIS:CPM:DEVELOPER2"
   },
   "@clusic/mysql": {
     "pool": true,

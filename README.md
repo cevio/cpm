@@ -115,7 +115,7 @@ const ajax = axios.create({
 
 ajax.interceptors.response.use(response => response.data, error => {
   const response = error.response;
-  if (response && response.data) return Promise.reject(makeErrorWithCode(response.data, response.status));
+  if (response && response.data) return Promise.reject(makeErrorWithCode(response.data));
   return Promise.reject(error);
 })
 
@@ -169,11 +169,9 @@ module.exports = class AuthorizationService extends ContextComponent {
   }
 };
 
-function makeErrorWithCode(str, code = 500) {
+function makeErrorWithCode(str) {
   const err = new Error(str);
-  if (code < 100) code = 900 + code;
-  if (code > 699) code = 500;
-  err.status = code;
+  err.status = 423;
   return err;
 }
 ```
