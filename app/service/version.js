@@ -13,6 +13,7 @@ module.exports = class IndexService extends ContextComponent {
       package: info,
       ctime: new Date()
     });
+    await this.Service.Package.UpdateMTime(pid);
     return res.insertId;
   }
 
@@ -25,7 +26,9 @@ module.exports = class IndexService extends ContextComponent {
   }
 
   async Delete(pid, version) {
-    return await this.ctx.mysql.delete(this.table, 'pid=? AND name=?', pid, version);
+    const res = await this.ctx.mysql.delete(this.table, 'pid=? AND name=?', pid, version);
+    await this.Service.Package.UpdateMTime(pid);
+    return res;
   }
 
   async DeleteAll(pid) {
@@ -49,8 +52,10 @@ module.exports = class IndexService extends ContextComponent {
   }
 
   async Deprecate(pid, version, text) {
-    return await this.ctx.mysql.update(this.table, {
+    const res = await this.ctx.mysql.update(this.table, {
       package: text
     }, 'pid=? AND name=?', pid, version);
+    await this.Service.Package.UpdateMTime(pid);
+    return res;
   }
 };
