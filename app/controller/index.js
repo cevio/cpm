@@ -12,7 +12,7 @@ global.CPM_CACHE = {};
 global.CPM_TIME = 0;
 
 @Controller()
-@Order(2)
+@Order(3)
 class IndexController extends ApplicationComponent {
   constructor(ctx) {
     super(ctx);

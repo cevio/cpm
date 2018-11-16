@@ -297,4 +297,18 @@ module.exports = class PackageService extends ContextComponent {
     await this.UpdateMTime(packageId);
     await cache.build('PackageList', { package: pathname });
   }
+
+  async Search(keyword, page, size) {
+    return await this.ctx.mysql.exec(`SELECT id, pathname FROM ?? WHERE pathname LIKE N? ORDER BY mtime DESC LIMIT ${(page - 1) * size}, ${size}`, this.table, `%${keyword}%`);
+  }
+
+  async SearchCount(keyword) {
+    return (await this.ctx.mysql.exec(`SELECT COUNT(id) AS count FROM ?? WHERE pathname LIKE N?`, this.table, `%${keyword}%`))[0].count;
+  }
+
+  async GetPackageByUser(account) {
+    const pids = await this.Service.Maintainer.GetPidByAccount(account);
+    if (!pids.length) return [];
+    return (await this.ctx.mysql.exec(`SELECT pathname FROM ?? WHERE id in (${pids.join(',')})`, this.table)).map(res => res.pathname);
+  }
 };

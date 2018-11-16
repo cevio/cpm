@@ -1,5 +1,6 @@
 const intersect = require('@evio/intersect');
 const { ContextComponent } = require('@clusic/method');
+const uniq = require('array-uniq');
 
 module.exports = class MaintainerService extends ContextComponent {
   constructor(ctx) {
@@ -44,5 +45,10 @@ module.exports = class MaintainerService extends ContextComponent {
 
   async DeleteAll(pid) {
     await this.ctx.mysql.delete(this.table, 'pid=?', pid);
+  }
+
+  async GetPidByAccount(account) {
+    const result = await this.ctx.mysql.exec(`SELECT pid FROM ?? WHERE account=?`, this.table, account);
+    return uniq(result.map(res => res.pid));
   }
 };
