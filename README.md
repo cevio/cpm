@@ -6,6 +6,14 @@
 
 CPM 是一套轻量且基础功能完善的私有Node包管理源。它是基于 [clusic](https://github.com/clusic) 的 [rex](https://github.com/clusic/rex) 架构开发，拥有进程负载均衡的特点。它主要提供一整套简易安装模式，用户只需要clone此项目到本地，修改config文件夹下的文件即可运行。它的数据源基于mysql数据库和redis缓存（支持redis集群）,能够有效提高NPM包的下载速度。它还拥有自定义用户系统接入的功能，让企业可以自主接入自己的用户体系，同时可以根据用户的scopes来确定用户提交私有包的权限。
 
+## Screen screenshot
+
+![1](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG123.jpeg)
+![2](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG124.jpeg)
+![3](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG125.jpeg)
+![4](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG126.jpeg)
+![5](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG127.jpeg)
+
 ## Dependencies
 
 - node >= 8.0.0
