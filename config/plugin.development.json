@@ -2,7 +2,7 @@
   "@clusic/redis": {
     "contextName": "redis",
     "options": {
-      "host": "192.168.2.182"
+      "host": "localhost"
     }
   },
   "@clusic/cache": {
@@ -12,17 +12,10 @@
     "pool": true,
     "contextName": "mysql",
     "options": {
-      "host": "192.168.2.181",
-      "user": "shenyj",
-      "password": "1qaz2wsx",
+      "host": "localhost",
+      "user": "user",
+      "password": "123456",
       "database": "cpm"
     }
-  },
-  "@evio/mpm": {
-    "baseURL": "http://auth.mzftech.cn/cnpm",
-    "scopes": [
-      "@html5",
-      "@node"
-    ]
   }
 }

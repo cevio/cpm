@@ -13,16 +13,9 @@
     "contextName": "mysql",
     "options": {
       "host": "127.0.0.1",
-      "user": "shenyunjie",
-      "password": "shenyj123456", 
+      "user": "user",
+      "password": "123456", 
       "database": "cpm"
     }
-  },
-  "@evio/mpm": {
-    "baseURL": "http://auth.mzftech.cn/cnpm",
-    "scopes": [
-      "@html5",
-      "@node"
-    ]
   }
 }

@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: 192.168.2.181 (MySQL 5.6.35)
+# Host: 192.168.2.187 (MySQL 5.5.60-MariaDB)
 # Database: cpm
-# Generation Time: 2018-11-09 13:15:22 +0000
+# Generation Time: 2018-11-19 07:41:43 +0000
 # ************************************************************
 
 
@@ -47,6 +47,7 @@ CREATE TABLE `package` (
   `name` varchar(100) NOT NULL DEFAULT '',
   `pathname` varchar(201) NOT NULL DEFAULT '',
   `ctime` datetime NOT NULL,
+  `mtime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_pathname` (`pathname`),
   UNIQUE KEY `uq_scope_alias` (`scope`,`name`),

@@ -6,7 +6,7 @@
 
 CPM 是一套轻量且基础功能完善的私有Node包管理源。它是基于 [clusic](https://github.com/clusic) 的 [rex](https://github.com/clusic/rex) 架构开发，拥有进程负载均衡的特点。它主要提供一整套简易安装模式，用户只需要clone此项目到本地，修改config文件夹下的文件即可运行。它的数据源基于mysql数据库和redis缓存（支持redis集群）,能够有效提高NPM包的下载速度。它还拥有自定义用户系统接入的功能，让企业可以自主接入自己的用户体系，同时可以根据用户的scopes来确定用户提交私有包的权限。
 
-## Screen screenshot
+## Screenshot
 
 ![1](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG123.jpeg)
 ![2](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG124.jpeg)
@@ -46,6 +46,8 @@ $ npm run restart
 # stop
 $ npm run stop
 ```
+
+> 注意，默认的项目下载后，无自定义的`UserService`，需要用户自己根据下面的说明编写代码。之后才能运行，否则一定会提示报错。
 
 ## Config
 
@@ -87,6 +89,12 @@ $ npm owner add <user> [<@scope>/]<pkg> --registry=http://npm.test.cn
 $ npm owner rm <user> [<@scope>/]<pkg> --registry=http://npm.test.cn
 $ npm owner ls [<@scope>/]<pkg> --registry=http://npm.test.cn
 $ npm deprecate <pkg>[@<version>] <message> --registry=http://npm.test.cn
+$ npm view [<@scope>/]<name>[@<version>] --registry=http://npm.test.cn
+$ npm dist-tag add <pkg>@<version> [<tag>] --registry=http://npm.test.cn
+$ npm dist-tag rm <pkg> <tag> --registry=http://npm.test.cn
+$ npm dist-tag ls [<pkg>] --registry=http://npm.test.cn
+$ pm access public [<package>] --registry=http://npm.test.cn
+$ npm access restricted [<package>] --registry=http://npm.test.cn
 ```
 
 当然在每个命令后面写上 `--registry=http://npm.test.cn` 比较繁琐，那么我们可以自己生成一个命令叫cpm简化它。
@@ -193,6 +201,16 @@ function makeErrorWithCode(str) {
 - scopes `array` 用户私有域数组
 
 至于 `extra` 是额外参数，可以随意传，作用在web界面上。
+
+## How to Update
+
+由于项目一般是从github克隆下来的，同时会将这个项目的`.git`删除，换成公司内部gitlab的仓库，那么就遇到问题了，如何更新到最新？我们可以通过一个简单的命令来处理：
+
+```javascript
+npm run update
+```
+
+执行完毕这个命令，我们会从github上将master分支的代码通过zip包模式下载，覆盖到本地，当然这是全量覆盖的。由于您的git仓库的存在，所以可以对比出修改了哪些文件，你可以revert或者自己处理非`app/`下的文件内容，一般都是配置。然后修改提交上线即可。
 
 ## How to contribute
 

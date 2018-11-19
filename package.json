@@ -6,7 +6,8 @@
     "dev": "clusic server dev --env development --port 7002",
     "start": "clusic server start --env production --port 7001",
     "stop": "clusic server stop",
-    "restart": "clusic server restart"
+    "restart": "clusic server restart",
+    "update": "node ./command/update.js"
   },
   "clusic": {
     "framework": "@clusic/rex",
@@ -30,7 +31,14 @@
     "koa-static": "^5.0.0",
     "mz": "^2.7.0",
     "mz-modules": "^2.1.0",
-    "request": "^2.88.0",
     "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "fs-extra": "^7.0.1",
+    "randomstring": "^1.1.5",
+    "request": "^2.88.0",
+    "request-progress": "^3.0.0",
+    "signale": "^1.3.0",
+    "unzip": "^0.1.11"
   }
 }
