@@ -93,7 +93,7 @@ $ npm view [<@scope>/]<name>[@<version>] --registry=http://npm.test.cn
 $ npm dist-tag add <pkg>@<version> [<tag>] --registry=http://npm.test.cn
 $ npm dist-tag rm <pkg> <tag> --registry=http://npm.test.cn
 $ npm dist-tag ls [<pkg>] --registry=http://npm.test.cn
-$ pm access public [<package>] --registry=http://npm.test.cn
+$ npm access public [<package>] --registry=http://npm.test.cn
 $ npm access restricted [<package>] --registry=http://npm.test.cn
 ```
 
