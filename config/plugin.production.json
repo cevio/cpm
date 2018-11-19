@@ -2,7 +2,7 @@
   "@clusic/redis": {
     "contextName": "redis",
     "options": {
-      "host": "192.168.2.187"
+      "host": "127.0.0.1"
     }
   },
   "@clusic/cache": {
@@ -12,9 +12,9 @@
     "pool": true,
     "contextName": "mysql",
     "options": {
-      "host": "192.168.2.187",
+      "host": "127.0.0.1",
       "user": "shenyunjie",
-      "password": "shenyj123456",
+      "password": "shenyj123456", 
       "database": "cpm"
     }
   },
