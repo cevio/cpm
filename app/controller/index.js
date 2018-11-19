@@ -11,7 +11,7 @@ const project = require('../../package.json');
 global.CPM_CACHE = {};
 global.CPM_TIME = 0;
 
-@Controller()
+@Controller
 @Order(3)
 class IndexController extends ApplicationComponent {
   constructor(ctx) {

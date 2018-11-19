@@ -35,4 +35,10 @@ module.exports = class IndexService extends ContextComponent {
   async DeleteAll(pid) {
     await this.ctx.mysql.delete(this.table, 'pid=?', pid);
   }
+
+  async Delete(pid, name) {
+    const res = await this.GetByPidAndName(pid, name);
+    if (!res.length) throw this.ctx.error('can not find the tag of ' + name);
+    return await this.ctx.mysql.delete(this.table, `pid=? AND name=?`, pid, name);
+  }
 };

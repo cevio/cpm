@@ -58,4 +58,8 @@ module.exports = class IndexService extends ContextComponent {
     await this.Service.Package.UpdateMTime(pid);
     return res;
   }
+
+  async Read(pid, version) {
+    return await this.ctx.mysql.exec(`SELECT * FROM ?? WHERE pid=? AND name=?`, this.table, pid, version);
+  }
 };
