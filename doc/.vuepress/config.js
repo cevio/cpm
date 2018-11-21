@@ -1,4 +1,5 @@
 module.exports = {
+  base: '/cpm/',
   title: 'CPM',
   description: '一套轻量化的NPM私有源管理程序',
   markdown: {
