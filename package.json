@@ -1,13 +1,15 @@
 {
   "name": "cpm",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The cpm project of rex",
   "scripts": {
     "dev": "clusic server dev --env development --port 7002",
     "start": "clusic server start --env production --port 7001",
     "stop": "clusic server stop",
     "restart": "clusic server restart",
-    "update": "node ./command/update.js"
+    "update": "node ./command/update.js",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
   "clusic": {
     "framework": "@clusic/rex",
@@ -16,10 +18,10 @@
   "dependencies": {
     "@clusic/cache": "^1.0.4",
     "@clusic/catch": "^1.0.4",
-    "@clusic/method": "^1.0.9",
+    "@clusic/method": "^1.0.10",
     "@clusic/mysql": "^1.0.6",
     "@clusic/redis": "^1.0.1",
-    "@clusic/rex": "^1.0.17",
+    "@clusic/rex": "^1.0.19",
     "@evio/intersect": "^1.0.4",
     "@evio/mpm": "^1.0.2",
     "array-uniq": "^2.0.0",
