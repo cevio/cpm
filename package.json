@@ -8,8 +8,8 @@
     "stop": "clusic server stop",
     "restart": "clusic server restart",
     "update": "node ./command/update.js",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:dev": "vuepress dev doc",
+    "docs:build": "vuepress build doc"
   },
   "clusic": {
     "framework": "@clusic/rex",
