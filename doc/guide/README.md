@@ -58,7 +58,7 @@ Error: You should setup your own `UserService` first
 配置有两个地方需要修改:
 
 - **config/config.{env}.js** `{env}`表示你的环境变量，一般开发是 `config.development.js`，生产环境是 `config.production.js`。你可以自由修改参数配置。注意`registryHost`属性必须修改为你自己的`http://127.0.0.1:7002`，否则下载包会报错，如果上线后，请直接修改为你的域名，比如`http://npm.example.com`。
-- **config/plugin.{env}.js** {env}同上。一般是用来配置插件的数据，这里我们需要根据环境不通来修改`mysql`和`redis`的数据配置。注意，redis如果需要支持集群模式，请将redis的配置下面的`options`编程一个等价数据结构的数组即可。
+- **config/plugin.{env}.js** `{env}`同上。一般是用来配置插件的数据，这里我们需要根据环境不通来修改`mysql`和`redis`的数据配置。注意，redis如果需要支持集群模式，请将redis的配置下面的`options`编程一个等价数据结构的数组即可。
 
 完成上面修改后，我们仅需要支持下用户即可。
 
@@ -197,7 +197,7 @@ scopes作用域作用结果都是在用户执行`cpm login`后生效。如果你
 
 ## 更新
 
-考虑到一般企业拥有自己的gitlab，当然会clone一份到自己的仓库，所以请在clone后执行`rm -rf .git`，清楚源仓库的引用。你可以提交本程序到你自己的仓库。更新的时候只需要运行
+考虑到一般企业拥有自己的gitlab，当然会clone一份到自己的仓库，所以请在clone后执行`rm -rf .git`，清除源仓库的引用。你可以提交本程序到你自己的仓库。更新的时候只需要运行
 
 ```bash
 npm run update

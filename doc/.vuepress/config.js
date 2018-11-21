@@ -9,7 +9,7 @@ module.exports = {
     displayAllHeaders: true,
     repo: 'cevio/cpm',
     repoLabel: 'GitHub',
-    docsDir: 'docs',
+    docsDir: 'doc',
     editLinks: true,
     editLinkText: '帮助我们改善此页面！',
     nav: [
