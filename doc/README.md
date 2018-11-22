@@ -13,6 +13,8 @@ features:
 footer: MIT Licensed | Copyright © 2018-present Evio Shen
 ---
 
+![1](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG125.jpeg)
+
 ## Install && Update
 
 ```bash
