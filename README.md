@@ -6,66 +6,9 @@
 
 CPM 是一套轻量且基础功能完善的私有Node包管理源。它是基于 [clusic](https://github.com/clusic) 的 [rex](https://github.com/clusic/rex) 架构开发，拥有进程负载均衡的特点。它主要提供一整套简易安装模式，用户只需要clone此项目到本地，修改config文件夹下的文件即可运行。它的数据源基于mysql数据库和redis缓存（支持redis集群）,能够有效提高NPM包的下载速度。它还拥有自定义用户系统接入的功能，让企业可以自主接入自己的用户体系，同时可以根据用户的scopes来确定用户提交私有包的权限。
 
-## Screenshot
-
-![1](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG123.jpeg)
-![2](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG124.jpeg)
-![3](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG125.jpeg)
-![4](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG126.jpeg)
-![5](https://syj-1256052570.cos.ap-shanghai.myqcloud.com/WechatIMG127.jpeg)
-
-## Dependencies
-
-- node >= 8.0.0
-- Databases:
-  - [mysql](https://dev.mysql.com/downloads/): >= 5.6.16
-  - redis
-
-## Usage
-
-```bash
-# clone from git
-$ git clone https://github.com/cevio/cpm.git
-$ cd cpm
-
-# install dependencies
-$ npm i
-
-# install cli
-$ npm i -g @clusic/cli pm2
-
-# development
-$ npm run dev
-
-# production
-$ npm run start
-
-# restart
-$ npm run restart
-
-# stop
-$ npm run stop
-```
-
-> 注意，默认的项目下载后，无自定义的`UserService`，需要用户自己根据下面的说明编写代码。之后才能运行，否则一定会提示报错。
-
-## Config
-
-配置有两个地方需要修改
-
-**config/config.{env}.js**
-
-`{env}`表示你的环境变量，一般开发是 `config.development.js`，生产环境是`config.production.js`。你可以自由修改参数配置。
-
-**config/plugin.{env}.js**
-
-`{env}`同上。一般是用来配置插件的数据，这里我们需要根据环境不通来修改mysql和redis的数据配置。
-
-完成这2步，恭喜你，那么你可以使用CPM来。
+更多查看 [文档](https://cevio.github.io/cpm/)
 
 ## Command support
-
-假设我们的服务域名是 http://npm.test.cn
 
 ```bash
 $ npm login --registry=http://npm.test.cn
@@ -97,19 +40,6 @@ $ npm access public [<package>] --registry=http://npm.test.cn
 $ npm access restricted [<package>] --registry=http://npm.test.cn
 ```
 
-当然在每个命令后面写上 `--registry=http://npm.test.cn` 比较繁琐，那么我们可以自己生成一个命令叫cpm简化它。
-
-```javascript
-#!/usr/bin/env node
-
-const childProcess = require('child_process');
-const argv = process.argv.slice(2);
-argv.push('--registry=http://npm.test.cn');
-childProcess.spawn('npm', argv, { stdio: 'inherit' });
-```
-
-> 虽然没有支持全部命令，但是对于我们的使用已经完全足够。在接下来的计划众，我们将尽可能支持更多的命令。
-
 ## Create Your Authorization
 
 你可以建立一个`/app/service/authorization.js`的文件，按照service模块的写法编写，也可以这样：
@@ -118,23 +48,9 @@ childProcess.spawn('npm', argv, { stdio: 'inherit' });
 clusic add authorization --service
 ```
 
-此文件作用就是自定义用户认证体系，有2个函数需要实现：`async Login() {}` 与 `async User() {}`
-
 我们来看个例子：
 
 ```javascript
-const axios = require('axios');
-const { ContextComponent } = require('@clusic/method');
-const ajax = axios.create({
-  baseURL: 'http://auth.mzftech.cn/cnpm'
-});
-
-ajax.interceptors.response.use(response => response.data, error => {
-  const response = error.response;
-  if (response && response.data) return Promise.reject(makeErrorWithCode(response.data));
-  return Promise.reject(error);
-})
-
 module.exports = class AuthorizationService extends ContextComponent {
   constructor(ctx) {
     super(ctx);
@@ -148,17 +64,7 @@ module.exports = class AuthorizationService extends ContextComponent {
       email: user.email,
       avatar: user.avatar,
       scopes: ['@' + account, '@html5', '@node'],
-      extra: {
-        department: user.department,
-        position: user.position,
-        mobile: user.mobile,
-        gender: user.gender,
-        isleader: user.isleader,
-        english_name: user.english_name,
-        telephone: user.telephone,
-        qr_code: user.qr_code,
-        alias: user.alias
-      }
+      extra: {}
     }
   }
 
@@ -170,26 +76,10 @@ module.exports = class AuthorizationService extends ContextComponent {
       email: user.email,
       avatar: user.avatar,
       scopes: ['@' + account, '@html5', '@node'],
-      extra: {
-        department: user.department,
-        position: user.position,
-        mobile: user.mobile,
-        gender: user.gender,
-        isleader: user.isleader,
-        english_name: user.english_name,
-        telephone: user.telephone,
-        qr_code: user.qr_code,
-        alias: user.alias
-      }
+      extra: {}
     }
   }
 };
-
-function makeErrorWithCode(str) {
-  const err = new Error(str);
-  err.status = 423;
-  return err;
-}
 ```
 
 两个函数必须返回的参数有：
@@ -202,19 +92,8 @@ function makeErrorWithCode(str) {
 
 至于 `extra` 是额外参数，可以随意传，作用在web界面上。
 
-## How to Update
+## License
 
-由于项目一般是从github克隆下来的，同时会将这个项目的`.git`删除，换成公司内部gitlab的仓库，那么就遇到问题了，如何更新到最新？我们可以通过一个简单的命令来处理：
+[MIT](https://opensource.org/licenses/MIT)
 
-```javascript
-npm run update
-```
-
-执行完毕这个命令，我们会从github上将master分支的代码通过zip包模式下载，覆盖到本地，当然这是全量覆盖的。由于您的git仓库的存在，所以可以对比出修改了哪些文件，你可以revert或者自己处理非`app/`下的文件内容，一般都是配置。然后修改提交上线即可。
-
-## How to contribute
-
-- Clone the project
-- Checkout a new branch
-- Add new features or fix bugs in the new branch
-- Make a pull request and we will review it ASAP
+Copyright (c) 2018-present, evio shen.
