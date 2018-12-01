@@ -1,6 +1,6 @@
 {
   "name": "cpm",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The cpm project of rex",
   "scripts": {
     "dev": "clusic server dev --env development --port 7002",
@@ -21,7 +21,7 @@
     "@clusic/method": "^1.0.10",
     "@clusic/mysql": "^1.0.6",
     "@clusic/redis": "^1.0.1",
-    "@clusic/rex": "^1.0.19",
+    "@clusic/rex": "^1.0.20",
     "@evio/intersect": "^1.0.4",
     "@evio/mpm": "^1.0.2",
     "array-uniq": "^2.0.0",
