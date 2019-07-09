@@ -1,4 +1,4 @@
-# 新版本已出，建议前往[NILPPM](https://github.com/nilppm/npm)下载最新版本。此CPM不再维护。如有疑问，请联系作者微信 `evioshen`
+# 新版本已出，建议前往[NILPPM](https://github.com/nilppm/npm)下载最新版本。此CPM不再维护。
 
 # China Package Manager
 
